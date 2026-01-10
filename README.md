@@ -1,11 +1,11 @@
-# 🏛️ Smart Civic Reporter (Civixa)
+#  Smart Civic Reporter (Civixa)
 
 A full-stack civic complaint management platform where citizens can report issues
 and authorities can track, manage, and resolve them efficiently.
 
-## ✨ Features
+## Features
 
-### 👤 Citizen
+###  Citizen
 - Register & Login with JWT authentication
 - Raise civic complaints with:
   - Title
@@ -16,7 +16,7 @@ and authorities can track, manage, and resolve them efficiently.
 - View status history & authority remarks
 - Delete complaint (only if pending & no authority action)
 
-### 🛡️ Authority
+### Authority
 - Secure authority login
 - View all citizen complaints
 - Filter & search complaints
@@ -24,12 +24,12 @@ and authorities can track, manage, and resolve them efficiently.
 - Update complaint status with official remarks
 - View complete complaint timeline
 
-### 🔐 Security
+### Security
 - Role-based authentication (Citizen / Authority)
 - JWT protected routes
 - Secure password hashing (bcrypt)
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - React.js
@@ -53,7 +53,7 @@ and authorities can track, manage, and resolve them efficiently.
 - Postman
 
 
-## 📁 Folder Structure
+##  Folder Structure
 
 backend/
 ├── config/
@@ -84,7 +84,7 @@ frontend/
 └── App.jsx
 
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 Create a `.env` file inside `backend/`:
 
@@ -100,24 +100,24 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 ---
 
-## 7️⃣ Screenshots (OPTIONAL but powerful)
+##  Screenshots (OPTIONAL but powerful)
 
 ```md
-## 📸 Screenshots
+## Screenshots
 
 - Citizen Dashboard
 - Complaint Form with Image Upload
 - Authority Dashboard
 - Image Preview & Download
 
-## 🔮 Future Enhancements
+## Future Enhancements
 - Real-time notifications (Socket.io)
 - Google Maps location tagging
 - Complaint SLA timer
 - Admin analytics dashboard
 
 
-## 👨‍💻 Author
+## Author
 
 **Sumit Salmuthe**  
 Full-Stack Developer  
