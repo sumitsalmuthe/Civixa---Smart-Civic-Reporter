@@ -27,9 +27,7 @@ widthFixStyle.innerHTML = `
 `;
 document.head.appendChild(widthFixStyle);
 
-/* =========================
-   GLOBAL ANIMATIONS
-========================= */
+/*Global Animation*/
 const animationStyle = document.createElement("style");
 animationStyle.innerHTML = `
 @keyframes fadeIn {
@@ -56,9 +54,7 @@ animationStyle.innerHTML = `
 `;
 document.head.appendChild(animationStyle);
 
-/* =========================
-   STYLES
-========================= */
+/*Style*/
 const styles = {
   skeletonLine: {
   height: 14,
@@ -288,9 +284,7 @@ responsiveStyle.innerHTML = `
 `;
 document.head.appendChild(responsiveStyle);
 
-/* =========================
-   COMPONENT
-========================= */
+/* Components */
 function AuthorityDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);

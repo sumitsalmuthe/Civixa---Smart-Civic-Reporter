@@ -55,9 +55,7 @@ function ComplaintCharts({ complaints = [] }) {
 
 export default ComplaintCharts;
 
-/* =========================
-   STYLES
-========================= */
+/* Style */
 const styles = {
   card: {
     background: "#fff",

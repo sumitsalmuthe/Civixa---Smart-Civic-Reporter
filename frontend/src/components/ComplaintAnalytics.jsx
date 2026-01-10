@@ -8,7 +8,8 @@ import {
 } from "recharts";
 
 const ComplaintAnalytics = ({ complaints }) => {
-  // STATUS DATA
+
+  // Status Data
   const statusData = [
     {
       name: "Pending",
@@ -24,7 +25,7 @@ const ComplaintAnalytics = ({ complaints }) => {
     },
   ];
 
-  // CATEGORY DATA
+  // Category Data
   const categoryMap = {};
   complaints.forEach((c) => {
     const cat = c.category || "Other";
@@ -40,7 +41,7 @@ const ComplaintAnalytics = ({ complaints }) => {
     <div style={styles.wrapper}>
       <h3>Complaint Analytics</h3>
 
-      {/* STATUS CHART */}
+      {/* Status Chart */}
       <div style={styles.chartBox}>
         <h4>Status Overview</h4>
         <ResponsiveContainer width="100%" height={250}>
@@ -53,7 +54,7 @@ const ComplaintAnalytics = ({ complaints }) => {
         </ResponsiveContainer>
       </div>
 
-      {/* CATEGORY CHART */}
+      {/* Category Chaart */}
       <div style={styles.chartBox}>
         <h4>Category-wise Distribution</h4>
         <ResponsiveContainer width="100%" height={250}>

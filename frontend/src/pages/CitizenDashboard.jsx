@@ -6,9 +6,7 @@ import RemarksTimeline from "../components/RemarksTimeline";
 import "../styles/responsive.css";
 
 
-/* =========================
-   GLOBAL ANIMATIONS
-========================= */
+/*Global Animation*/
 const animationStyle = document.createElement("style");
 animationStyle.innerHTML = `
 @keyframes fadeIn {
@@ -24,9 +22,7 @@ animationStyle.innerHTML = `
 `;
 document.head.appendChild(animationStyle);
 
-/* =========================
-   STYLES
-========================= */
+/* Styles */
 const styles = {
  page: {
   padding: "36px 20px",
@@ -37,11 +33,11 @@ const styles = {
 
 
   container: {
-  maxWidth: 1400,   // 🔥 1200 → 1400
+  maxWidth: 1400,   
   width: "100%",
   margin: "0 auto",
   background: "#ffffff",
-  padding: "36px 40px", // thoda side padding bhi badha diya
+  padding: "36px 40px", 
   borderRadius: 22,
   boxShadow: "0 14px 40px rgba(0,0,0,0.08)",
 },
@@ -115,14 +111,14 @@ const styles = {
 
   complaintGrid: {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", // 🔥 wider cards
+  gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", 
   gap: 24,
 },
 
 
  complaintCard: {
   background: "#ffffff",
-  padding: 22, // 🔥 18 → 22
+  padding: 22, 
   borderRadius: 18,
   boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
 },
@@ -182,9 +178,7 @@ const styles = {
   },
 };
 
-/* =========================
-   COMPONENT
-========================= */
+/* Components */
 function CitizenDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -258,7 +252,7 @@ formData.append("landmark", landmark);
         <div
            style={{
     ...styles.card,
-    maxWidth: 760,      // 🔥 YAHI SIZE CONTROL
+    maxWidth: 760,      
     width: "100%",
     margin: "0 auto 36px",
   }}
@@ -301,7 +295,7 @@ formData.append("landmark", landmark);
     onChange={(e) => setDescription(e.target.value)}
     required
   />
-  {/* CATEGORY */}
+  {/*Category*/}
 <label style={styles.label}>Problem Category</label>
 <select
   style={styles.input}
@@ -321,7 +315,7 @@ formData.append("landmark", landmark);
     value={area}
     onChange={(e) => setArea(e.target.value)}
   />
-{/* LANDMARK */}
+{/* Landmark */}
 <label style={styles.label}>Nearby Landmark (optional)</label>
 <input
   style={styles.input}
@@ -384,7 +378,7 @@ formData.append("landmark", landmark);
           }}
         />
 
-        {/* ❌ Remove Image */}
+        {/* Remove Image */}
         <button
           type="button"
           onClick={() =>
@@ -427,7 +421,7 @@ formData.append("landmark", landmark);
 
         </div>
 
-        {/* FILTER */}
+        {/* Filter */}
         <div style={styles.filterRow}>
           <input
             style={styles.input}
@@ -458,7 +452,7 @@ formData.append("landmark", landmark);
 </h2>
 
 
-        {/* COMPLAINTS */}
+        {/* Complaints */}
         {loading && <p>Loading...</p>}
         
 <div className="complaint-grid">
@@ -490,7 +484,7 @@ formData.append("landmark", landmark);
                 🕒 {new Date(c.createdAt).toLocaleString()}
               </div>
 
-              {/* 🖼️ Complaint Images (Citizen View) */}
+              {/* Complaint Images (Citizen View) */}
 {c.images?.length > 0 && (
   <div style={styles.imageRow}>
     {c.images.map((img, i) => (

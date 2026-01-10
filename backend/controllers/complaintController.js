@@ -3,9 +3,7 @@ import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import cloudinary from "../config/cloudinary.js";
 
-/* =========================
-   CREATE COMPLAINT
-========================= */
+/* create complaint */
 export const createComplaint = async (req, res) => {
   try {
     const { title, description, category, area, landmark } = req.body;
@@ -55,9 +53,7 @@ export const createComplaint = async (req, res) => {
   }
 };
 
-/* =========================
-   GET MY COMPLAINTS
-========================= */
+/* get my complaints */
 export const getMyComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find({
@@ -70,9 +66,7 @@ export const getMyComplaints = async (req, res) => {
   }
 };
 
-/* =========================
-   GET ALL COMPLAINTS
-========================= */
+/*get all complaints*/
 export const getAllComplaints = async (req, res) => {
   try {
     const complaints = await Complaint.find()
@@ -85,9 +79,7 @@ export const getAllComplaints = async (req, res) => {
   }
 };
 
-/* =========================
-   UPDATE STATUS
-========================= */
+/* update status*/
 export const updateComplaintStatus = async (req, res) => {
   try {
     const { status, comment } = req.body;
@@ -117,9 +109,7 @@ export const updateComplaintStatus = async (req, res) => {
   }
 };
 
-/* =========================
-   DELETE COMPLAINT
-========================= */
+/* delete complaint*/
 export const deleteComplaint = async (req, res) => {
   try {
     const complaint = await Complaint.findById(req.params.id);

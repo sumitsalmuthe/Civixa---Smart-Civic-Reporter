@@ -19,7 +19,7 @@ export const protect = async (req, res, next) => {
 
     req.user = {
   id: user._id,
-  role: user.role.toLowerCase(), // 🔥 MUST
+  role: user.role.toLowerCase(), 
   email: user.email,
   name: user.name,
 };
@@ -40,7 +40,7 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;   // 🔥 VERY IMPORTANT
+    req.user = decoded; 
     next();
   } catch {
     return res.status(401).json({ message: "Invalid token" });

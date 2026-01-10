@@ -11,7 +11,7 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// ✅ Citizen (with images)
+/* Citizen with images */
 router.post(
   "/",
   protect,
@@ -23,7 +23,7 @@ router.post(
 router.get("/my", protect, authorize("citizen"), getMyComplaints);
 router.delete("/:id", protect, authorize("citizen"), deleteComplaint);
 
-// ✅ Authority
+// Authority
 router.get("/all", protect, authorize("authority"), getAllComplaints);
 router.put(
   "/:id/status",

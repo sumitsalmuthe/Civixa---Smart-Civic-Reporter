@@ -59,9 +59,7 @@ function Notifications() {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
-  /* =========================
-     FETCH NOTIFICATIONS
-  ========================= */
+  /*Fetch Notifications*/
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -77,9 +75,7 @@ function Notifications() {
     fetchNotifications();
   }, []);
 
-  /* =========================
-     MARK AS READ
-  ========================= */
+  /*Mark as Read*/
   const markAsRead = async (id) => {
     try {
       await API.put(`/notifications/${id}/read`);
@@ -90,16 +86,14 @@ function Notifications() {
         )
       );
 
-      // 🔔 notify Navbar
+      // notify Navbar
       window.dispatchEvent(new Event("notifications-updated"));
     } catch {
       alert("Failed to mark as read");
     }
   };
 
-  /* =========================
-     BACK TO DASHBOARD
-  ========================= */
+  /*Back to Dashboard*/
   const goToDashboard = () => {
     if (role === "authority") {
       navigate("/authority");
@@ -113,7 +107,8 @@ function Notifications() {
       <Navbar />
 
       <div style={styles.page}>
-        {/* 🔙 BACK BUTTON */}
+        
+        {/* BACK BUTTON */}
         <button onClick={goToDashboard} style={styles.backBtn}>
           ← Back to Dashboard
         </button>
