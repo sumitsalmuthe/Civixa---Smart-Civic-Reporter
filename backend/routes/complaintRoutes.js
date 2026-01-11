@@ -11,7 +11,9 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-/* Citizen with images */
+/* ======================
+   Citizen Routes
+====================== */
 router.post(
   "/",
   protect,
@@ -20,11 +22,30 @@ router.post(
   createComplaint
 );
 
-router.get("/my", protect, authorize("citizen"), getMyComplaints);
-router.delete("/:id", protect, authorize("citizen"), deleteComplaint);
+router.get(
+  "/my",
+  protect,
+  authorize("citizen"),
+  getMyComplaints
+);
 
-// Authority
-router.get("/all", protect, authorize("authority"), getAllComplaints);
+router.delete(
+  "/:id",
+  protect,
+  authorize("citizen"),
+  deleteComplaint
+);
+
+/* ======================
+   Authority Routes
+====================== */
+router.get(
+  "/all",
+  protect,
+  authorize("authority"),
+  getAllComplaints
+);
+
 router.put(
   "/:id/status",
   protect,
@@ -32,4 +53,5 @@ router.put(
   updateComplaintStatus
 );
 
+/* 🔥 THIS IS REQUIRED */
 export default router;

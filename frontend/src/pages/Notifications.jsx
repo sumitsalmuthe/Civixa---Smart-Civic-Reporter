@@ -59,7 +59,6 @@ function Notifications() {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
 
-  /*Fetch Notifications*/
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -75,25 +74,20 @@ function Notifications() {
     fetchNotifications();
   }, []);
 
-  /*Mark as Read*/
   const markAsRead = async (id) => {
     try {
       await API.put(`/notifications/${id}/read`);
-
       setNotifications((prev) =>
         prev.map((n) =>
           n._id === id ? { ...n, isRead: true } : n
         )
       );
-
-      // notify Navbar
       window.dispatchEvent(new Event("notifications-updated"));
     } catch {
       alert("Failed to mark as read");
     }
   };
 
-  /*Back to Dashboard*/
   const goToDashboard = () => {
     if (role === "authority") {
       navigate("/authority");
@@ -106,14 +100,21 @@ function Notifications() {
     <>
       <Navbar />
 
-      <div style={styles.page}>
-        
-        {/* BACK BUTTON */}
+      {/* ✅ BACK BUTTON — Navbar ke niche */}
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "26px 100px 0",
+        }}
+      >
         <button onClick={goToDashboard} style={styles.backBtn}>
           ← Back to Dashboard
         </button>
+      </div>
 
-        <center><h2>Notifications</h2></center>
+      <div style={styles.page}>
+        <h2 style={{ textAlign: "center" }}>Notifications</h2>
 
         {loading && <p>Loading notifications...</p>}
 

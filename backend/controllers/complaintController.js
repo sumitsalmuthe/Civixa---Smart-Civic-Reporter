@@ -84,8 +84,16 @@ export const updateComplaintStatus = async (req, res) => {
   try {
     const { status, comment } = req.body;
 
+    if (!status || !comment) {
+      return res
+        .status(400)
+        .json({ message: "Status and remark required" });
+    }
+
     const complaint = await Complaint.findById(req.params.id).populate("citizen");
-    if (!complaint) return res.status(404).json({ message: "Not found" });
+    if (!complaint) {
+      return res.status(404).json({ message: "Complaint not found" });
+    }
 
     complaint.status = status;
     complaint.remarks.push({
@@ -97,17 +105,20 @@ export const updateComplaintStatus = async (req, res) => {
 
     await complaint.save();
 
+    // Notify citizen
     await Notification.create({
       user: complaint.citizen._id,
       complaint: complaint._id,
-      message: `Status updated to ${status}`,
+      message: `Your complaint status updated to ${status}`,
     });
 
-    res.json({ message: "Updated", complaint });
-  } catch {
+    res.json({ message: "Complaint updated successfully" });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Update failed" });
   }
 };
+
 
 /* delete complaint*/
 export const deleteComplaint = async (req, res) => {

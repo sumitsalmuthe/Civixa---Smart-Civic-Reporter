@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import logo from "../assets/logo/civixa-logo.png";
 
@@ -19,18 +19,22 @@ const styles = {
     justifyContent: "space-between",
   },
   left: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
+ display: "flex",
+  alignItems: "center",
+  gap: 12,
+  minWidth: 160,   // 🔥 ensures text never hides
   },
   logoImg: {
-    width: 90,
-    height: 90,
+    width: 120,
+  height: 120,
+  objectFit: "contain",
   },
   logoText: {
-    fontSize: 20,
-    fontWeight: 700,
-    color: "#fff",
+    fontSize: 22,
+  fontWeight: 700,
+  color: "#ffffff",
+  letterSpacing: "0.3px",
+  whiteSpace: "nowrap",
   },
   center: {
     flex: 1,
@@ -47,7 +51,9 @@ const styles = {
     position: "relative",
     fontSize: 20,
     color: "#fff",
-    textDecoration: "none",
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
   },
   badge: {
     position: "absolute",
@@ -82,13 +88,22 @@ const styles = {
 function Navbar() {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
-    API.get("/notifications/my")
-      .then((res) =>
-        setUnreadCount(res.data.filter((n) => !n.isRead).length)
-      )
-      .catch(() => setUnreadCount(0));
+    const fetchCount = () => {
+      API.get("/notifications/my")
+        .then((res) =>
+          setUnreadCount(res.data.filter((n) => !n.isRead).length)
+        )
+        .catch(() => setUnreadCount(0));
+    };
+
+    fetchCount();
+    window.addEventListener("notifications-updated", fetchCount);
+
+    return () =>
+      window.removeEventListener("notifications-updated", fetchCount);
   }, []);
 
   return (
@@ -104,18 +119,27 @@ function Navbar() {
         )}
 
         <div style={styles.right}>
-          <Link to="/notifications" style={styles.notificationBtn}>
+          {/* 🔔 WORKING NOTIFICATION */}
+          <button
+            style={styles.notificationBtn}
+            type="button"
+            onClick={() => navigate("/notifications")}
+          >
             🔔
             {unreadCount > 0 && (
               <span style={styles.badge}>{unreadCount}</span>
             )}
-          </Link>
-          <span style={styles.role}>Citizen</span>
+          </button>
+
+          <span style={styles.role}>
+            {role === "authority" ? "Authority" : "Citizen"}
+          </span>
+
           <button
             style={styles.logoutBtn}
             onClick={() => {
               localStorage.clear();
-              navigate("/");
+              navigate("/login");
             }}
           >
             Logout

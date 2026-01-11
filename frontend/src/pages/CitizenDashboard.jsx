@@ -5,8 +5,9 @@ import StatusBadge from "../components/StatusBadge";
 import RemarksTimeline from "../components/RemarksTimeline";
 import "../styles/responsive.css";
 
-
-/*Global Animation*/
+/* =========================
+   GLOBAL ANIMATION
+========================= */
 const animationStyle = document.createElement("style");
 animationStyle.innerHTML = `
 @keyframes fadeIn {
@@ -22,26 +23,18 @@ animationStyle.innerHTML = `
 `;
 document.head.appendChild(animationStyle);
 
-/* Styles */
+
+
+/* =========================
+   STYLES
+========================= */
 const styles = {
- page: {
-  padding: "36px 20px",
-  background: "#f4f6f8",
-  minHeight: "100vh",
-  animation: "fadeIn 0.4s ease",
-},
-
-
-  container: {
-  maxWidth: 1400,   
-  width: "100%",
-  margin: "0 auto",
-  background: "#ffffff",
-  padding: "36px 40px", 
-  borderRadius: 22,
-  boxShadow: "0 14px 40px rgba(0,0,0,0.08)",
-},
-
+  page: {
+    padding: "36px 20px",
+    background: "#f4f6f8",
+    minHeight: "100vh",
+    animation: "fadeIn 0.4s ease",
+  },
 
   card: {
     background: "#ffffff",
@@ -55,7 +48,7 @@ const styles = {
   formTitle: {
     fontSize: 24,
     fontWeight: 700,
-    marginBottom: 18,
+    marginBottom: 10,
     textAlign: "center",
   },
 
@@ -96,6 +89,7 @@ const styles = {
     fontSize: 15,
     fontWeight: 600,
     cursor: "pointer",
+    transition: "all 0.2s ease",
   },
 
   filterRow: {
@@ -105,24 +99,22 @@ const styles = {
     justifyContent: "center",
     flexWrap: "wrap",
     maxWidth: 900,
-  width: "100%",
-  margin: "0 auto 36px",
+    margin: "0 auto 36px",
   },
 
   complaintGrid: {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))", 
-  gap: 24,
-},
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))",
+    gap: 24,
+  },
 
-
- complaintCard: {
-  background: "#ffffff",
-  padding: 22, 
-  borderRadius: 18,
-  boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-},
-
+  complaintCard: {
+    background: "#ffffff",
+    padding: 22,
+    borderRadius: 18,
+    boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+  },
 
   header: {
     display: "flex",
@@ -178,48 +170,28 @@ const styles = {
   },
 };
 
-/* Components */
+/* =========================
+   COMPONENT
+========================= */
 function CitizenDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openTimeline, setOpenTimeline] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  /* Form state */
   const [title, setTitle] = useState("");
-const [description, setDescription] = useState("");
-const [area, setArea] = useState("");
-const [images, setImages] = useState([]);
-const [category, setCategory] = useState("other");
-const [landmark, setLandmark] = useState("");
+  const [description, setDescription] = useState("");
+  const [area, setArea] = useState("");
+  const [category, setCategory] = useState("other");
+  const [landmark, setLandmark] = useState("");
+  const [images, setImages] = useState([]);
 
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-
-  const formData = new FormData();
-  formData.append("title", title);
-  formData.append("description", description);
-  formData.append("area", area);
-  formData.append("category", category);
-formData.append("landmark", landmark);
-
-  for (let img of images) {
-    formData.append("images", img);
-  }
-
-  try {
-    await API.post("/complaints", formData);
-    setTitle("");
-    setDescription("");
-    setArea("");
-    setImages([]);
-    fetchMyComplaints();
-    alert("Complaint submitted successfully");
-  } catch {
-    alert("Failed to submit complaint");
-  }
-};
+  /* UX states */
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const fetchMyComplaints = async () => {
     try {
@@ -233,6 +205,36 @@ formData.append("landmark", landmark);
   useEffect(() => {
     fetchMyComplaints();
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSuccessMsg("");
+    setErrorMsg("");
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("area", area);
+    formData.append("category", category);
+    formData.append("landmark", landmark);
+
+    images.forEach((img) => formData.append("images", img));
+
+    try {
+      await API.post("/complaints", formData);
+      setTitle("");
+      setDescription("");
+      setArea("");
+      setImages([]);
+      setSuccessMsg("Complaint submitted successfully ✅");
+      fetchMyComplaints();
+    } catch {
+      setErrorMsg("Failed to submit complaint");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const filteredComplaints = complaints.filter((c) => {
     const matchesSearch =
@@ -248,230 +250,116 @@ formData.append("landmark", landmark);
       <Navbar />
 
       <div style={styles.page}>
-        {/* FORM */}
-        <div
-           style={{
-    ...styles.card,
-    maxWidth: 760,      
-    width: "100%",
-    margin: "0 auto 36px",
-  }}
+        {/* ================= FORM ================= */}
+        <div style={{ ...styles.card, maxWidth: 760, margin: "0 auto 36px" }}>
+          <h2 style={styles.formTitle}>Raise a New Complaint</h2>
+          <p style={{ textAlign: "center", color: "#6b7280", marginBottom: 16 }}>
+            Submit civic issues easily and track their status.
+          </p>
 
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-4px)";
-            e.currentTarget.style.boxShadow =
-              "0 16px 36px rgba(0,0,0,0.12)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 10px 26px rgba(0,0,0,0.08)";
-          }}
-        >
-          <h2 style={{ ...styles.formTitle, textAlign: "center" }}>
-  Raise a New Complaint
-</h2>
+          {successMsg && (
+            <div
+              style={{
+                background: "#ecfdf5",
+                color: "#065f46",
+                padding: 12,
+                borderRadius: 10,
+                marginBottom: 14,
+                textAlign: "center",
+                fontWeight: 600,
+              }}
+            >
+              {successMsg}
+            </div>
+          )}
 
-<p style={{ textAlign: "center", color: "#6b7280", marginBottom: 14 }}>
-  Submit civic issues easily and track their status.
-</p>
+          {errorMsg && (
+            <div
+              style={{
+                background: "#fef2f2",
+                color: "#991b1b",
+                padding: 12,
+                borderRadius: 10,
+                marginBottom: 14,
+                textAlign: "center",
+                fontWeight: 600,
+              }}
+            >
+              {errorMsg}
+            </div>
+          )}
 
-          <form
-  onSubmit={handleSubmit}
-  style={{ marginTop: 20 }}
->
-  <label style={styles.label}>Title</label>
-  <input
-    style={styles.input}
-    value={title}
-    onChange={(e) => setTitle(e.target.value)}
-    required
-  />
+          <form onSubmit={handleSubmit}>
+            <label style={styles.label}>Title</label>
+            <input style={styles.input} value={title} onChange={(e) => setTitle(e.target.value)} required />
 
-  <label style={styles.label}>Description</label>
-  <textarea
-    style={styles.textarea}
-    value={description}
-    onChange={(e) => setDescription(e.target.value)}
-    required
-  />
-  {/*Category*/}
-<label style={styles.label}>Problem Category</label>
-<select
-  style={styles.input}
-  value={category}
-  onChange={(e) => setCategory(e.target.value)}
->
-  <option value="light">Street Light</option>
-  <option value="road">Road / Pothole</option>
-  <option value="water">Water Supply</option>
-  <option value="garbage">Garbage / Cleanliness</option>
-  <option value="other">Other</option>
-</select>
+            <label style={styles.label}>Description</label>
+            <textarea style={styles.textarea} value={description} onChange={(e) => setDescription(e.target.value)} required />
 
-  <label style={styles.label}>Area</label>
-  <input
-    style={styles.input}
-    value={area}
-    onChange={(e) => setArea(e.target.value)}
-  />
-{/* Landmark */}
-<label style={styles.label}>Nearby Landmark (optional)</label>
-<input
-  style={styles.input}
-  placeholder="e.g. Near Metro Station, School, Temple"
-  value={landmark}
-  onChange={(e) => setLandmark(e.target.value)}
-/>
-  <label style={styles.label}>Complaint Evidence (optional)</label>
-<input
-  type="file"
-  accept="image/*"
-  multiple
-  onChange={(e) => {
-    const newFiles = Array.from(e.target.files);
+            <label style={styles.label}>Problem Category</label>
+            <select style={styles.input} value={category} onChange={(e) => setCategory(e.target.value)}>
+              <option value="light">Street Light</option>
+              <option value="road">Road / Pothole</option>
+              <option value="water">Water Supply</option>
+              <option value="garbage">Garbage / Cleanliness</option>
+              <option value="other">Other</option>
+            </select>
 
-    // total images (old + new)
-    const combined = [...images, ...newFiles];
+            <label style={styles.label}>Area</label>
+            <input style={styles.input} value={area} onChange={(e) => setArea(e.target.value)} />
 
-    if (combined.length > 3) {
-      alert("You can upload only 3 images");
-      return;
-    }
+            <label style={styles.label}>Nearby Landmark (optional)</label>
+            <input style={styles.input} value={landmark} onChange={(e) => setLandmark(e.target.value)} />
 
-    setImages(combined);
+            <label style={styles.label}>Complaint Evidence (optional)</label>
+            <input type="file" multiple accept="image/*" onChange={(e) => {
+              const files = Array.from(e.target.files);
+              if (files.length + images.length > 3) {
+                alert("You can upload only 3 images");
+                return;
+              }
+              setImages([...images, ...files]);
+              e.target.value = "";
+            }} />
 
-    // reset input so same file can be selected again if needed
-    e.target.value = "";
-  }}
-  style={{ marginBottom: 8 }}
-/>
-
-{images.length > 0 && (
-  <div
-    style={{
-      display: "flex",
-      gap: 12,
-      marginBottom: 16,
-      flexWrap: "wrap",
-    }}
-  >
-    {images.map((img, index) => (
-      <div
-        key={index}
-        style={{
-          position: "relative",
-          width: 90,
-          height: 90,
-          borderRadius: 10,
-          overflow: "hidden",
-          border: "1px solid #d1d5db",
-        }}
-      >
-        <img
-          src={URL.createObjectURL(img)}
-          alt="preview"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-
-        {/* Remove Image */}
-        <button
-          type="button"
-          onClick={() =>
-            setImages(images.filter((_, i) => i !== index))
-          }
-          style={{
-            position: "absolute",
-            top: 4,
-            right: 4,
-            background: "rgba(0,0,0,0.6)",
-            color: "#fff",
-            border: "none",
-            width: 22,
-            height: 22,
-            borderRadius: "50%",
-            cursor: "pointer",
-            fontSize: 12,
-          }}
-        >
-          ✕
-        </button>
-      </div>
-    ))}
-  </div>
-)}
-
-<p style={{ fontSize: 12, color: "#6b7280", marginBottom: 12 }}>
-  You can upload a maximum of 3 images (JPG / PNG)
-</p>
-
-<p style={{ fontSize: 12, color: "#6b7280", marginBottom: 12 }}>
-  You can upload a maximum of 3 images (JPG / PNG)
-</p>
-
-
-  <button style={styles.submitBtn} type="submit">
-    Submit Complaint
-  </button>
-</form>
-
+            <button
+              type="submit"
+              style={{
+                ...styles.submitBtn,
+                opacity: submitting ? 0.7 : 1,
+                cursor: submitting ? "not-allowed" : "pointer",
+              }}
+              disabled={submitting}
+            >
+              {submitting ? "Submitting..." : "Submit Complaint"}
+            </button>
+          </form>
         </div>
 
-        {/* Filter */}
+        {/* ================= FILTER ================= */}
         <div style={styles.filterRow}>
-          <input
-            style={styles.input}
-            placeholder="Search by title or area"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <select
-            style={styles.input}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
+          <input style={styles.input} placeholder="Search by title or area" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <select style={styles.input} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
             <option value="in_progress">In Progress</option>
             <option value="resolved">Resolved</option>
           </select>
         </div>
-<h2
-  style={{
-    textAlign: "center",
-    margin: "30px 0 20px",
-    fontSize: 26,
-    fontWeight: 700,
-  }}
->
-  My Complaints
-</h2>
 
-
-        {/* Complaints */}
+        {/* ================= COMPLAINTS ================= */}
         {loading && <p>Loading...</p>}
-        
-<div className="complaint-grid">
 
+        {!loading && filteredComplaints.length === 0 && (
+          <div style={{ textAlign: "center", padding: 40, color: "#6b7280" }}>
+            <h3>No complaints yet</h3>
+            <p>Raise your first complaint using the form above.</p>
+          </div>
+        )}
+
+        <div className="complaint-grid">
           {filteredComplaints.map((c) => (
-            <div
-              key={c._id}
-              style={styles.complaintCard}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow =
-                  "0 14px 34px rgba(0,0,0,0.12)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow =
-                  "0 8px 22px rgba(0,0,0,0.06)";
-              }}
-            >
+            <div key={c._id} style={styles.complaintCard}>
               <div style={styles.header}>
                 <strong>{c.title}</strong>
                 <StatusBadge status={c.status} />
@@ -480,63 +368,42 @@ formData.append("landmark", landmark);
               <p>{c.description}</p>
 
               <div style={styles.meta}>
-                📍 {c.area || "N/A"} <br />
-                🕒 {new Date(c.createdAt).toLocaleString()}
-              </div>
-
-              {/* Complaint Images (Citizen View) */}
-{c.images?.length > 0 && (
-  <div style={styles.imageRow}>
-    {c.images.map((img, i) => (
-      <img
-        key={i}
-        src={img.url}
-        alt="complaint"
-        style={styles.thumb}
-        onClick={() => window.open(img.url, "_blank")}
-      />
-    ))}
-  </div>
-)}
-
-              <div style={styles.actionRow}>
-  <button
-    style={styles.viewBtn}
-    onClick={() =>
-      setOpenTimeline(openTimeline === c._id ? null : c._id)
-    }
-  >
-    {openTimeline === c._id
-      ? "Hide Status History ▲"
-      : "View Status History ▼"}
-  </button>
-
-  <button
-    style={{
-      ...styles.deleteBtn,
-      opacity: c.status === "pending" ? 1 : 0.5,
-      cursor: c.status === "pending" ? "pointer" : "not-allowed",
-    }}
-    disabled={c.status !== "pending"}
-    onClick={async () => {
-      if (c.status !== "pending") return;
-      if (!window.confirm("Delete this complaint?")) return;
-      try {
-        await API.delete(`/complaints/${c._id}`);
-        fetchMyComplaints();
-      } catch {
-        alert("Cannot delete complaint after authority action");
-      }
-    }}
-  >
-    Delete
-  </button>
+  📍 {c.area || "N/A"} <br />
+  📨 Submitted on:{" "}
+  <strong>
+    {new Date(c.createdAt).toLocaleDateString()}{" "}
+    {new Date(c.createdAt).toLocaleTimeString()}
+  </strong>
 </div>
 
 
-              {openTimeline === c._id && (
-                <RemarksTimeline remarks={c.remarks || []} />
+              {c.images?.length > 0 && (
+                <div style={styles.imageRow}>
+                  {c.images.map((img, i) => (
+                    <img key={i} src={img.url} alt="" style={styles.thumb} onClick={() => window.open(img.url, "_blank")} />
+                  ))}
+                </div>
               )}
+
+              <div style={styles.actionRow}>
+                <button style={styles.viewBtn} onClick={() => setOpenTimeline(openTimeline === c._id ? null : c._id)}>
+                  {openTimeline === c._id ? "Hide Status History ▲" : "View Status History ▼"}
+                </button>
+
+                <button
+                  style={{ ...styles.deleteBtn, opacity: c.status === "pending" ? 1 : 0.5 }}
+                  disabled={c.status !== "pending"}
+                  onClick={async () => {
+                    if (!window.confirm("Delete this complaint?")) return;
+                    await API.delete(`/complaints/${c._id}`);
+                    fetchMyComplaints();
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+
+              {openTimeline === c._id && <RemarksTimeline remarks={c.remarks || []} />}
             </div>
           ))}
         </div>

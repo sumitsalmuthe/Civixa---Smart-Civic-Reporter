@@ -15,12 +15,15 @@ function Login() {
     setError("");
 
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
 
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
+      localStorage.setItem("role", res.data.user.role);
 
-      if (res.data.role === "authority") {
+      if (res.data.user.role === "authority") {
         navigate("/authority");
       } else {
         navigate("/citizen");
@@ -31,44 +34,64 @@ function Login() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2 className="auth-title">Welcome</h2>
-        <p className="auth-subtitle">Login to Smart Civic Reporter</p>
+  <div className="auth-page">
+    <div className="auth-card">
+      <h2 className="auth-title">Welcome</h2>
+      <p className="auth-subtitle">Login to Smart Civic Reporter</p>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <form onSubmit={handleLogin}>
-          <input
-            className="auth-input"
-            type="email"
-            placeholder="Your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <form onSubmit={handleLogin}>
+        {/* EMAIL */}
+        <input
+          className="auth-input"
+          type="email"
+          placeholder="Your Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-          <input
-            className="auth-input"
-            type="password"
-            placeholder="Your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        {/* PASSWORD */}
+        <input
+          className="auth-input"
+          type="password"
+          placeholder="Your Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-          <button className="auth-button">Log in</button>
-        </form>
+        {/* FORGOT PASSWORD — 👈 YAHI SAHI JAGAH */}
+       <p
+  className="auth-link"
+  style={{ textAlign: "center", marginTop: 8 }}
+  onClick={() => navigate("/forgot-password")}
+>
+  Forgot password?
+</p>
 
-        <div className="auth-footer">
-          Don’t have an account?{" "}
-          <span className="auth-link" onClick={() => navigate("/register")}>
-            Sign up
-          </span>
-        </div>
+
+        {/* LOGIN BUTTON */}
+        <button className="auth-button" type="submit">
+          Log in
+        </button>
+      </form>
+
+      {/* SIGN UP — ❗ SIRF EK HI BAAR */}
+      <div className="auth-footer">
+        Don’t have an account?{" "}
+        <span
+          className="auth-link"
+          onClick={() => navigate("/register")}
+        >
+          Sign up
+        </span>
       </div>
     </div>
-  );
+  </div>
+);
+
 }
 
 export default Login;

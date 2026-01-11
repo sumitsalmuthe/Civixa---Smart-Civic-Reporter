@@ -1,15 +1,48 @@
 import mongoose from "mongoose";
 
+const remarkSchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      enum: ["pending", "in_progress", "resolved"],
+      required: true,
+    },
+    comment: {
+      type: String,
+      required: true,
+    },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { _id: false }
+);
+
 const complaintSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+    },
 
-    category: { type: String, default: "other" },
+    description: {
+      type: String,
+      required: true,
+    },
+
+    category: {
+      type: String,
+      default: "other",
+    },
 
     location: {
-      area: { type: String, default: "Not specified" },
-      landmark: { type: String, default: "" },
+      area: String,
+      landmark: String,
     },
 
     citizen: {
@@ -23,31 +56,19 @@ const complaintSchema = new mongoose.Schema(
       enum: ["pending", "in_progress", "resolved"],
       default: "pending",
     },
-    images: [
-  {
-    url: String,
-    public_id: String,
-  },
-],
 
-    remarks: [
+    images: [
       {
-        status: {
-          type: String,
-          enum: ["pending", "in_progress", "resolved", "rejected"],
-          required: true,
-        },
-        comment: { type: String, required: true },
-        updatedBy: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        createdAt: { type: Date, default: Date.now },
+        url: String,
+        public_id: String,
       },
     ],
+
+    remarks: [remarkSchema],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.model("Complaint", complaintSchema);

@@ -71,3 +71,7 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+.auth-link:hover {
+  text-decoration: underline;
+}

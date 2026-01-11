@@ -7,7 +7,7 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("citizen");
+  
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ function Register() {
         name,
         email,
         password,
-        role,
       });
       navigate("/");
     } catch {
@@ -65,14 +64,7 @@ function Register() {
             required
           />
 
-          <select
-            className="auth-input"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="citizen">Citizen</option>
-            <option value="authority">Authority</option>
-          </select>
+          
 
           <button className="auth-button">Submit</button>
         </form>

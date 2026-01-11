@@ -5,76 +5,37 @@ import StatusBadge from "../components/StatusBadge";
 import RemarksTimeline from "../components/RemarksTimeline";
 import ComplaintCharts from "../components/ComplaintCharts";
 
-const skeletonStyle = document.createElement("style");
-skeletonStyle.innerHTML = `
-@keyframes shimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+/* ======================
+   GLOBAL STYLES
+====================== */
+const styleTag = document.createElement("style");
+styleTag.innerHTML = `
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-`;
-document.head.appendChild(skeletonStyle);
-
-const widthFixStyle = document.createElement("style");
-widthFixStyle.innerHTML = `
-/* Desktop width control */
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+@media (min-width: 768px) {
+  .filters-center {
+    justify-content: center;
+  }
+}
 @media (min-width: 992px) {
   .container-narrow {
     max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
   }
 }
 `;
-document.head.appendChild(widthFixStyle);
+document.head.appendChild(styleTag);
 
-/*Global Animation*/
-const animationStyle = document.createElement("style");
-animationStyle.innerHTML = `
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-`;
-document.head.appendChild(animationStyle);
-
-/*Style*/
+/* ======================
+   STYLES
+====================== */
 const styles = {
-  skeletonLine: {
-  height: 14,
-  borderRadius: 8,
-  background:
-    "linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 37%, #e5e7eb 63%)",
-  backgroundSize: "400px 100%",
-  animation: "shimmer 1.2s infinite",
-},
-
-skeletonCard: {
-  background: "#fff",
-  padding: 20,
-  borderRadius: 18,
-  boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
-  display: "flex",
-  flexDirection: "column",
-  gap: 12,
-},
-
   page: {
     padding: "36px 24px",
     background: "#f4f6f8",
@@ -84,17 +45,18 @@ skeletonCard: {
 
   welcomeCard: {
     background: "#ffffff",
-    padding: 24,
-    borderRadius: 16,
-    marginBottom: 24,
-    boxShadow: "0 8px 20px rgba(0,0,0,0.06)",
+    padding: 28,
+    borderRadius: 18,
+    marginBottom: 26,
+    boxShadow: "0 10px 24px rgba(0,0,0,0.06)",
+    textAlign: "center", // ✅ CENTER FIX
   },
 
   input: {
     width: "100%",
-    padding: 10,
+    padding: 12,
     marginBottom: 14,
-    borderRadius: 10,
+    borderRadius: 12,
     border: "1px solid #d1d5db",
     fontSize: 14,
   },
@@ -102,12 +64,12 @@ skeletonCard: {
   filters: {
     display: "flex",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 24,
     flexWrap: "wrap",
   },
 
   filterBtn: {
-    padding: "8px 14px",
+    padding: "8px 16px",
     borderRadius: 999,
     border: "1px solid #d1d5db",
     cursor: "pointer",
@@ -119,26 +81,25 @@ skeletonCard: {
   list: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))",
-    gap: 20,
+    gap: 22,
     maxWidth: 1200,
     margin: "0 auto",
   },
 
   card: {
     background: "#ffffff",
-    padding: 20,
+    padding: 22,
     borderRadius: 18,
-    boxShadow: "0 10px 24px rgba(0,0,0,0.08)",
+    boxShadow: "0 10px 26px rgba(0,0,0,0.08)",
     display: "flex",
     flexDirection: "column",
     gap: 12,
-    transition: "transform 0.25s ease, box-shadow 0.25s ease",
+    transition: "box-shadow 0.2s ease",
   },
 
   cardHeader: {
     display: "flex",
     justifyContent: "space-between",
-    gap: 10,
     alignItems: "flex-start",
   },
 
@@ -169,7 +130,6 @@ skeletonCard: {
     borderRadius: 10,
     cursor: "pointer",
     border: "1px solid #e5e7eb",
-    transition: "transform 0.25s ease, box-shadow 0.25s ease",
   },
 
   actionBox: {
@@ -195,7 +155,6 @@ skeletonCard: {
     borderRadius: 12,
     cursor: "pointer",
     fontWeight: 600,
-    transition: "transform 0.15s ease",
   },
 
   toggleBtn: {
@@ -207,14 +166,6 @@ skeletonCard: {
     fontSize: 13,
     fontWeight: 600,
     color: "#1e3a8a",
-  },
-
-  emptyState: {
-    background: "#ffffff",
-    padding: 40,
-    borderRadius: 18,
-    textAlign: "center",
-    color: "#6b7280",
   },
 
   modalOverlay: {
@@ -233,11 +184,6 @@ skeletonCard: {
     borderRadius: 20,
     maxWidth: "90vw",
     maxHeight: "90vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 14,
-    position: "relative",
     animation: "zoomIn 0.25s ease",
   },
 
@@ -260,31 +206,34 @@ skeletonCard: {
     cursor: "pointer",
     fontSize: 18,
   },
+  chartCard: {
+  background: "#ffffff",
+  padding: "32px 40px",
+  borderRadius: 20,
+  boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+  marginBottom: 30,
+},
 
-  downloadBtn: {
-    width: "100%",
-    padding: "12px",
-    background: "#0b5ed7",
-    color: "#ffffff",
-    borderRadius: 12,
-    border: "none",
-    cursor: "pointer",
-    fontWeight: 600,
-  },
 };
 
-const responsiveStyle = document.createElement("style");
-responsiveStyle.innerHTML = `
-/* Desktop only */
-@media (min-width: 768px) {
-  .filters-center {
-    justify-content: center;
-  }
-}
-`;
-document.head.appendChild(responsiveStyle);
+const getResolutionTime = (complaint) => {
+  if (!complaint.remarks || complaint.remarks.length === 0) return null;
 
-/* Components */
+  const first = new Date(complaint.createdAt);
+  const last = new Date(
+    complaint.remarks[complaint.remarks.length - 1].createdAt
+  );
+
+  const diffMs = last - first;
+  const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffMins = Math.floor((diffMs / (1000 * 60)) % 60);
+
+  return `${diffHrs}h ${diffMins}m`;
+};
+
+/* ======================
+   COMPONENT
+====================== */
 function AuthorityDashboard() {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -301,6 +250,7 @@ function AuthorityDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+  
   const updateStatus = async (id) => {
     const comment = comments[id];
     const status = comments[`status_${id}`] || "pending";
@@ -308,7 +258,8 @@ function AuthorityDashboard() {
 
     try {
       setUpdatingId(id);
-      await API.put(`/complaints/${id}/status`, { status, comment });
+     await API.put(`/complaints/${id}/status`, { status, comment });
+
       setComments({});
       const res = await API.get("/complaints/all");
       setComplaints(res.data);
@@ -322,44 +273,71 @@ function AuthorityDashboard() {
   return (
     <>
       <Navbar />
-      <div style={styles.page}>
-       <div style={styles.welcomeCard} className="container-narrow">
 
-          <h2>Authority Dashboard</h2>
-          <p>Review and manage civic complaints</p>
+      <div style={styles.page}>
+        {/* WELCOME */}
+        <div style={styles.welcomeCard} className="container-narrow">
+          <h2 style={{ fontWeight: 700 }}>Authority Dashboard</h2>
+          <p style={{ color: "#6b7280" }}>
+            Review, assign, and resolve citizen complaints efficiently
+          </p>
         </div>
 
-        <div className="container-narrow">
-  <ComplaintCharts complaints={complaints} />
-</div>
+      <div style={styles.chartCard} className="container-narrow">
+  <h2 style={{ textAlign: "center", marginBottom: 8 }}>
+    Complaint Status Overview
+  </h2>
 
+  <p
+    style={{
+      textAlign: "center",
+      color: "#6b7280",
+      marginBottom: 24,
+    }}
+  >
+    Overview of complaint resolution progress
+  </p>
 
-       <div className="container-narrow">
-  <input
-    style={styles.input}
-    placeholder="Search by title, area or citizen email"
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-  />
-
-  <div style={styles.filters} className="filters-center">
-    {["all", "pending", "in_progress", "resolved"].map((f) => (
-      <button
-        key={f}
-        style={{
-          ...styles.filterBtn,
-          background: filter === f ? "#2563eb" : "#fff",
-          color: filter === f ? "#fff" : "#374151",
-        }}
-        onClick={() => setFilter(f)}
-      >
-        {f === "all" ? "ALL" : f.replace("_", " ").toUpperCase()}
-      </button>
-    ))}
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+    }}
+  >
+    <ComplaintCharts complaints={complaints} />
   </div>
 </div>
 
 
+
+
+        {/* SEARCH + FILTER */}
+        <div className="container-narrow">
+          <input
+            style={styles.input}
+            placeholder="Search by title, area or citizen email"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <div style={styles.filters} className="filters-center">
+            {["all", "pending", "in_progress", "resolved"].map((f) => (
+              <button
+                key={f}
+                style={{
+                  ...styles.filterBtn,
+                  background: filter === f ? "#2563eb" : "#fff",
+                  color: filter === f ? "#fff" : "#374151",
+                }}
+                onClick={() => setFilter(f)}
+              >
+                {f === "all" ? "ALL" : f.replace("_", " ").toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* LIST */}
         <div style={styles.list}>
           {complaints
             .filter(
@@ -372,31 +350,27 @@ function AuthorityDashboard() {
                     .includes(search.toLowerCase()))
             )
             .map((c) => (
-              <div
-                key={c._id}
-                style={styles.card}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 18px 40px rgba(0,0,0,0.12)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 10px 24px rgba(0,0,0,0.08)";
-                }}
-              >
-                <div style={styles.cardHeader}>
-                  <h4>{c.title}</h4>
-                  <StatusBadge status={c.status} />
-                </div>
+              <div key={c._id} style={styles.card}>
+                {c.remarks?.length > 0 && (
+  <p style={{ fontSize: 13, color: "#374151", marginTop: 4 }}>
+    ⏱ Resolution Time:{" "}
+    <strong>{getResolutionTime(c)}</strong>
+  </p>
+)}
+
 
                 <p style={styles.description}>{c.description}</p>
 
                 <div style={styles.meta}>
-                  📍 {c.location?.area || "Not specified"} <br />
-                  👤 {c.citizen?.email}
-                </div>
+  📍 {c.location?.area || "Not specified"} <br />
+  👤 {c.citizen?.email} <br />
+  📨 Received:{" "}
+  <strong>
+    {new Date(c.createdAt).toLocaleDateString()}{" "}
+    {new Date(c.createdAt).toLocaleTimeString()}
+  </strong>
+</div>
+
 
                 {c.images?.length > 0 && (
                   <div style={styles.imageRow}>
@@ -406,15 +380,6 @@ function AuthorityDashboard() {
                         src={img.url}
                         style={styles.thumb}
                         onClick={() => setPreviewImage(img.url)}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = "scale(1.08)";
-                          e.currentTarget.style.boxShadow =
-                            "0 6px 16px rgba(0,0,0,0.2)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.boxShadow = "none";
-                        }}
                       />
                     ))}
                   </div>
@@ -449,12 +414,6 @@ function AuthorityDashboard() {
                     style={styles.updateBtn}
                     disabled={updatingId === c._id}
                     onClick={() => updateStatus(c._id)}
-                    onMouseDown={(e) =>
-                      (e.currentTarget.style.transform = "scale(0.97)")
-                    }
-                    onMouseUp={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
                   >
                     {updatingId === c._id ? "Updating..." : "Update Status"}
                   </button>
@@ -465,9 +424,7 @@ function AuthorityDashboard() {
                     <button
                       style={styles.toggleBtn}
                       onClick={() =>
-                        setOpenTimeline(
-                          openTimeline === c._id ? null : c._id
-                        )
+                        setOpenTimeline(openTimeline === c._id ? null : c._id)
                       }
                     >
                       {openTimeline === c._id
@@ -500,10 +457,7 @@ function AuthorityDashboard() {
             >
               ✕
             </button>
-
             <img src={previewImage} alt="" style={styles.modalImg} />
-
-            <button style={styles.downloadBtn}>⬇ Download</button>
           </div>
         </div>
       )}
